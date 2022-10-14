@@ -1,16 +1,45 @@
-const player_table = require("../model/playerModel");
+const { team_table, player_table } = require("../model/joinTable");
+const { sequelize, Op } = require("sequelize")
+exports.checkfind = async (req, res) => {
+    try {
+        const alldata = await player_table.findAll({
+            where: {
+                id: [1, 2]
+            }
+        })
+        res.send(alldata)
+    } catch (error) {
+        // res.json({ error: error })
+        res.send("error")
+    }
+}
+
+
+
+
 
 
 
 exports.getPlayerAll = async (req, res) => {
     try {
-        const alldata = await player_table.findAll()
+        const alldata = await player_table.findAll({
+            include: [
+                {
+                    model: team_table
+                },
+            ]
+        })
         res.send(alldata)
     } catch (error) {
-        console.log(error, "get all err");
+        // res.json({ error: error })
+        res.send("error")
     }
-
 }
+
+
+
+
+
 exports.getPlayer = async (req, res) => {
     try {
         const data = await player_table.findAll({
@@ -29,9 +58,10 @@ exports.addPlayer = async (req, res) => {
     let age = req.body.age
     let captain = req.body.captain
     let dob = req.body.dob
+    let team_id = req.body.team_id;
     try {
         const playerTC = player_table.build({
-            id, name, age, captain, dob
+            id, name, age, captain, dob, team_id
         })
         await playerTC.save();
         res.send(`data is add `)
@@ -60,7 +90,7 @@ exports.updatePlayer = async (req, res) => {
 
 
 
-exports.deletePlayer= async (req, res) => {
+exports.deletePlayer = async (req, res) => {
 
     try {
         const data = await req.body.data

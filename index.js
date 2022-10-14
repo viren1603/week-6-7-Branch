@@ -19,5 +19,5 @@ app.use("/team", teamRouters)
 const port = process.env.PORT
 
 app.listen(port, () => {
-    console.log(`server is runing port no ${port}`);
+    console.log(`http://localhost:${port}`);
 })

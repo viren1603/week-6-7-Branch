@@ -1,10 +1,16 @@
-const team_table = require("../model/teamModel");
+const { team_table, player_table } = require("../model/joinTable");
 
 
 
 exports.getTeamAll = async (req, res) => {
     try {
-        const alldata = await team_table.findAll()
+        const alldata = await team_table.findAll({
+            include: [
+                {
+                    model: player_table
+                }
+            ]
+        })
         res.send(alldata)
     } catch (error) {
         console.log(error, "get all err");
@@ -26,6 +32,7 @@ exports.getTeam = async (req, res) => {
 exports.addTeam = async (req, res) => {
     let id = req.body.id
     let name = req.body.name
+    // console.log(req.body);
     try {
         const teamTC = team_table.build({
             id, name
